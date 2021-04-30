@@ -19,4 +19,27 @@ class CenmoePlugin {
     final String version = await _channel.invokeMethod('savePicture',{"path":path});
     return version;
   }
+
+  static Future getPhoneCode(String phoneNumber,String zone,String tempCode, Function(dynamic ret,Map err)result) {
+
+    Map args = {"phoneNumber": phoneNumber, "zone":zone, "tempCode":tempCode};
+
+    Future<dynamic> callback = _channel.invokeMethod('getTextCode', args);
+
+    callback.then((dynamic response){
+      if(result != null)
+      {
+        if(response is Map)
+        {
+          result(response["ret"],response["err"]);
+        }
+        else
+        {
+          result(null,null);
+        }
+      }
+    });
+
+    return callback;
+  }
 }
